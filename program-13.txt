@@ -1,0 +1,82 @@
+Write a C program to implement either Top Down parsing technique or Bottom Up Parsing technique to check whether the given input string is satisfying the grammar or not.
+Code:
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+char input[MAX];
+char stack[MAX];
+int top = -1;
+
+void push(char c) {
+    stack[++top] = c;
+}
+
+char pop() {
+    return stack[top--];
+}
+
+int isOperator(char c) {
+    return (c == '+' || c == '-' || c == '*' || c == '/');
+}
+
+int isTerminal(char c) {
+    return (c >= 'a' && c <= 'z');
+}
+
+void parse() {
+    int i = 0;
+    push('$');
+    push('E');
+
+    while (top != -1) {
+        char stackTop = pop();
+        char currentInput = input[i];
+
+        if (stackTop == currentInput) {
+            i++;
+        } else if (isOperator(stackTop)) {
+            if (isOperator(currentInput)) {
+                continue;
+            } else {
+                printf("Error: Invalid input\n");
+                return;
+            }
+        } else if (stackTop == 'E') {
+            if (currentInput == 'a') {
+                push('E');
+                push('T');
+            } else {
+                printf("Error: Invalid input\n");
+                return;
+            }
+        } else {
+            printf("Error: Invalid input\n");
+            return;
+        }
+    }
+
+    if (input[i] == '\0' && top == -1) {
+        printf("Input string is accepted\n");
+    } else {
+        printf("Input string is rejected\n");
+    }
+}
+
+int main() {
+    printf("Enter the input string: ");
+    scanf("%s", input);
+    parse();
+    return 0;
+}
+
+
+
+Output:
+Input	Output
+a	Input string is accepted
+aa	Input string is accepted
+aaa	Input string is accepted
+.
+

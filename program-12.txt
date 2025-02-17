@@ -1,0 +1,67 @@
+Write a C program to construct recursive descent parsing for the given grammar
+Code:
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+char input[100];
+int current_char_index = 0; 
+void expr();
+void term();
+void factor();
+void match(char expected) {
+    if (input[current_char_index] == expected) {
+        current_char_index++;
+    } else {
+        printf("Error: Expected '%c' but found '%c' at %d\n", expected, input[current_char_index], current_char_index + 1);
+        exit(1);
+    }
+}
+void expr() {
+    term();
+    while (input[current_char_index] == '+' || input[current_char_index] == '-') {
+        match(input[current_char_index]);
+        term();
+    }
+}
+
+void term() {
+    factor();
+    while (input[current_char_index] == '*' || input[current_char_index] == '/') {
+        match(input[current_char_index]);
+        factor();
+    }
+}
+void factor() {
+    if (isdigit(input[current_char_index])) {
+      while(isdigit(input[current_char_index])){
+        match(input[current_char_index]);
+      }
+    } else if (input[current_char_index] == '(') {
+        match('(');
+        expr();
+        match(')');
+    } else {
+        printf("Error: Invalid input at %d\n", current_char_index + 1);
+        exit(1);
+    }
+}
+
+int main() {
+    printf("Enter an expression: ");
+    scanf("%99s", input); // Prevent buffer overflow
+    expr();
+    if (input[current_char_index] == '\0') {
+        printf("Valid expression.\n");
+    } else {
+        printf("Error: Extra characters at the end of input.\n");
+    }
+    return 0;
+}
+
+
+Output:
+Enter an expression: 10+2*5
+Valid expression.
+
+

@@ -1,0 +1,74 @@
+Implement the concept of Shift reduce parsing in C Programming.
+Code:
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 100
+
+char stack[MAX][MAX];
+int top = -1;
+
+void push(char *str) {
+    if (top < MAX - 1) {
+        top++;
+        strcpy(stack[top], str);
+    }
+}
+
+char* pop() {
+    if (top >= 0) {
+        return stack[top--];
+    }
+    return NULL;
+}
+
+int isOperator(char c) {
+    return (c == '+' || c == '-' || c == '*' || c == '/');
+}
+
+void shift(char *input, int *index) {
+    char temp[2] = {input[*index], '\0'};
+    push(temp);
+    (*index)++;
+}
+void reduce() {
+    char *op1 = pop();
+    char *operator = pop();
+    char *op2 = pop();
+    if (op1 && operator && op2) {
+        char result[MAX];
+        sprintf(result, "(%s %s %s)", op2, operator, op1);
+        push(result);
+    }
+}
+
+void parse(char *input) {
+    int index = 0;
+    while (input[index] != '\0') {
+        if (isOperator(input[index])) {
+            shift(input, &index);
+            reduce();
+        } else {
+            char temp[2] = {input[index], '\0'};
+            push(temp);
+            index++;
+        }
+    }
+}
+
+int main() {
+    char input[MAX];
+    printf("Enter the expression: ");
+    scanf("%s", input);
+    
+    parse(input);
+    
+    printf("Parsed Expression: %s\n", pop());
+    return 0;
+}
+
+
+Output:	
+Enter the expression: a+b*c
+Parsed Expression: c
