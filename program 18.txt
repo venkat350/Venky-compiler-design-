@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+typedef struct {
+    char op[10];
+    char arg1[10];
+    char arg2[10];
+    char result[10];
+} TAC;
+void generateAssembly(TAC tac[], int count) 
+{
+    printf("Generated Assembly Code:\n");
+    for (int i = 0; i < count; i++) 
+	{
+        if (strcmp(tac[i].op, "+") == 0)
+            printf("MOV R0, %s\nADD R0, %s\nMOV %s, R0\n", tac[i].arg1, tac[i].arg2, tac[i].result);
+        else if (strcmp(tac[i].op, "-") == 0)
+            printf("MOV R0, %s\nSUB R0, %s\nMOV %s, R0\n", tac[i].arg1, tac[i].arg2, tac[i].result);
+        else if (strcmp(tac[i].op, "*") == 0)
+            printf("MOV R0, %s\nMUL R0, %s\nMOV %s, R0\n", tac[i].arg1, tac[i].arg2, tac[i].result);
+        else if (strcmp(tac[i].op, "/") == 0)
+            printf("MOV R0, %s\nDIV R0, %s\nMOV %s, R0\n", tac[i].arg1, tac[i].arg2, tac[i].result);
+    }
+}
+int main() 
+{
+    TAC tac[] = 
+	{
+        {"+", "a", "b", "t1"},
+        {"*", "t1", "c", "t2"},
+        {"-", "t2", "d", "t3"},
+        {"/", "t3", "e", "result"}
+    };
+    int count = sizeof(tac) / sizeof(tac[0]);
+    generateAssembly(tac, count);
+    return 0;
+}

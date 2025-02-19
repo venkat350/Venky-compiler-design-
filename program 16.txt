@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <string.h>
+int t = 1;
+void genTAC(char op, char a, char b) 
+{ 
+    printf("t%d = %c %c %c\n", t++, a, op, b); 
+}
+void process(char expr[]) 
+{
+    char s[100]; int top = -1;
+    for (int i = 0; expr[i] != '\0'; i++) 
+	{
+        if (strchr("+-*/", expr[i])) 
+		{
+            genTAC(expr[i], s[top - 1], s[top]);
+            s[--top] = 't' + t - 2;
+        } else s[++top] = expr[i];
+    }
+}
+int main() 
+{
+    char expr[100];
+    printf("Enter expr: ");
+    scanf("%s", expr);
+    process(expr);
+    return 0;
+}
